@@ -157,11 +157,12 @@ resource "aws_alb_listener_rule" "https" {
   }
 
   condition {
-    field = element(var.lb_listener_rules, count.index)["condition_field"]
-    values = split(
-      ",",
-      element(var.lb_listener_rules, count.index)["condition_field"],
-    )
+    path_pattern {
+      values = split(
+        ",",
+        element(var.lb_listener_rules, count.index)["condition_field"],
+      )
+    }
   }
 }
 
