@@ -157,11 +157,12 @@ resource "aws_alb_listener_rule" "https" {
   }
 
   condition {
-    field = element(var.lb_listener_rules, count.index)["condition_field"]
-    values = split(
-      ",",
-      element(var.lb_listener_rules, count.index)["condition_field"],
-    )
+    path_pattern {
+      values = split(
+        ",",
+        element(var.lb_listener_rules, count.index)["condition_field"],
+      )
+    }
   }
 }
 
@@ -183,7 +184,7 @@ module "tls_certificate" {
   tls_certificate_end_date           = var.lb_end_date
   tls_certificate_domain_name        = var.lb_domain_name
   tls_certificate_domain_name_cnames = var.lb_domain_name_cnames
-  tls_certificate_domain_zone_name   = var.lb_domain_zone_name
+  tls_certificate_domain_zone_name   = trim(var.lb_domain_zone_name, ".")
 }
 
 resource "aws_security_group" "firewall_rule" {
